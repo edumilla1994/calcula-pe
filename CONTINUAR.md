@@ -62,6 +62,9 @@ Todo se activa con variables en `.env` (ver `.env.example`, el archivo no se sub
 visitante acepta**. Si rechaza, no se descarga ningún script de terceros. El meta de verificación
 de Search Console se emite en el `<head>` de todas las páginas cuando existe la variable.
 
+Estado actual: **GA4 activo** con `G-87RNLX8LMR`, verificado en producción (0 peticiones antes de
+aceptar y hit `g/collect` después). Search Console queda pendiente.
+
 Pasos para activarlo:
 
 1. GA4: Administrar → Crear propiedad → flujo de datos web con la URL del sitio → copiar `G-...`.
