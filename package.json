@@ -6,10 +6,14 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "deploy": "npm run build && gh-pages -d dist -b gh-pages -m \"deploy\""
   },
   "dependencies": {
-    "astro": "^7.4.2",
-    "@astrojs/sitemap": "^3.6.0"
+    "@astrojs/sitemap": "^3.6.0",
+    "astro": "^7.4.2"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
   }
 }
