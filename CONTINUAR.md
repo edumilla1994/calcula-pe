@@ -63,7 +63,8 @@ visitante acepta**. Si rechaza, no se descarga ningún script de terceros. El me
 de Search Console se emite en el `<head>` de todas las páginas cuando existe la variable.
 
 Estado actual: **GA4 activo** con `G-87RNLX8LMR`, verificado en producción (0 peticiones antes de
-aceptar y hit `g/collect` después). Search Console queda pendiente.
+aceptar y hit `g/collect` después). **Search Console verificado** por archivo HTML
+(`public/google9d506733a5c750bd.html`); falta enviar el sitemap `sitemap-index.xml`.
 
 Pasos para activarlo:
 
