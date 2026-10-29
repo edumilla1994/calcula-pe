@@ -2,7 +2,8 @@
 
 Calculadoras gratuitas para Perú: **CTS, gratificación, indemnización, IGV y préstamos**.
 
-- Sitio: https://edumilla1994.github.io/calcula-pe/
+- Sitio (GitHub Pages): https://edumilla1994.github.io/calcula-pe/
+- Cloudflare Pages (preview, `noindex` hasta tener dominio): https://calcula-pe.pages.dev/
 - Stack: Astro 7 (estático) + Cloudflare/GitHub Pages.
 - Sin backend: todos los cálculos se hacen en el navegador.
 - Sin registro, sin base de datos, sin almacenamiento de montos.
@@ -29,10 +30,20 @@ npm run preview  # sirve dist/
 ## Deploy
 
 ```bash
-npm run deploy   # build + publica en la rama gh-pages
+npm run deploy   # GitHub Pages: build base /calcula-pe + rama gh-pages
+```
+
+Cloudflare Pages (raíz `/`):
+
+```powershell
+$env:BASE_PATH="/"; $env:SITE_URL="https://calcula-pe.pages.dev"
+npm run build
+wrangler pages deploy dist --project-name calcula-pe --branch main
+Remove-Item Env:BASE_PATH, Env:SITE_URL
 ```
 
 GitHub Pages sirve la rama `gh-pages` en https://edumilla1994.github.io/calcula-pe/.
+Cloudflare Pages sirve `calcula-pe.pages.dev` con `noindex` (para evitar contenido duplicado) hasta conectar el dominio propio.
 
 Para un dominio propio: cambiar `site` y `base` en `astro.config.mjs`, luego configurar el dominio en GitHub Pages o migrar a Cloudflare Pages.
 
