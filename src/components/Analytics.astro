@@ -1,0 +1,73 @@
+---
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const privacyUrl = base + 'privacidad/';
+const gaId = import.meta.env.PUBLIC_GA_ID;
+const adsClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
+const activo = Boolean(gaId || adsClient);
+---
+
+{activo && (
+  <>
+    <div class="consent" id="consent" hidden role="dialog" aria-label="Aviso de cookies">
+      <p>
+        Usamos cookies para medir visitas y, si corresponde, mostrar anuncios. Puedes aceptar o seguir
+        solo con lo necesario. Más detalles en <a href={privacyUrl}>privacidad</a>.
+      </p>
+      <div class="consent-actions">
+        <button type="button" class="consent-btn" id="consent-reject">Solo necesarias</button>
+        <button type="button" class="consent-btn is-primary" id="consent-accept">Aceptar</button>
+      </div>
+    </div>
+
+    <script is:inline define:vars={{ gaId, adsClient }}>
+      (() => {
+        const KEY = 'calcula-pe-consent';
+        const banner = document.getElementById('consent');
+        const accept = document.getElementById('consent-accept');
+        const reject = document.getElementById('consent-reject');
+
+        const cargar = () => {
+          if (gaId) {
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function () { window.dataLayer.push(arguments); };
+            gtag('consent', 'default', { ad_storage: 'denied', analytics_storage: 'denied' });
+            gtag('consent', 'update', { ad_storage: 'granted', analytics_storage: 'granted' });
+            gtag('js', new Date());
+            gtag('config', gaId, { anonymize_ip: true });
+            const s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(gaId);
+            document.head.appendChild(s);
+          }
+          if (adsClient) {
+            const s = document.createElement('script');
+            s.async = true;
+            s.crossOrigin = 'anonymous';
+            s.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(adsClient);
+            document.head.appendChild(s);
+          }
+        };
+
+        let decision = null;
+        try { decision = localStorage.getItem(KEY); } catch (_) {}
+
+        if (decision === 'granted') {
+          cargar();
+        } else if (!decision) {
+          banner.hidden = false;
+        }
+
+        accept?.addEventListener('click', () => {
+          try { localStorage.setItem(KEY, 'granted'); } catch (_) {}
+          banner.hidden = true;
+          cargar();
+        });
+
+        reject?.addEventListener('click', () => {
+          try { localStorage.setItem(KEY, 'denied'); } catch (_) {}
+          banner.hidden = true;
+        });
+      })();
+    </script>
+  </>
+)}

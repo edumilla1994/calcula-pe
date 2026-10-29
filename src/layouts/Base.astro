@@ -1,12 +1,13 @@
 ---
 import '../styles/global.css';
 import AdSlot from '../components/AdSlot.astro';
+import Analytics from '../components/Analytics.astro';
 
 const { title, description } = Astro.props;
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 const url = (p = '') => base + p.replace(/^\//, '');
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const adsClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
+const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
 const path = Astro.url.pathname.replace(/\/$/, '');
 const esHome = path === base.replace(/\/$/, '');
 ---
@@ -25,14 +26,7 @@ const esHome = path === base.replace(/\/$/, '');
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="es_PE" />
     <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
-    {adsClient && (
-      <script
-        is:inline
-        async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsClient}`}
-        crossorigin="anonymous"
-      ></script>
-    )}
+    {gsc && <meta name="google-site-verification" content={gsc} />}
     <slot name="head" />
   </head>
   <body>
@@ -88,5 +82,7 @@ const esHome = path === base.replace(/\/$/, '');
         Verifica siempre con tu empleador, SUNAT o un profesional. © 2026 Calcula Perú.
       </div>
     </footer>
+
+    <Analytics />
   </body>
 </html>

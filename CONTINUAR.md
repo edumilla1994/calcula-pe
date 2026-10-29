@@ -45,9 +45,30 @@ PUBLIC_ADSENSE_SLOT=XXXXXXXXXX
 ```
 
 Sin variables no se renderiza nada en producción. En desarrollo se ve un placeholder punteado para
-validar el layout. El script de AdSense se carga una sola vez desde `Base.astro`; la home tiene un
-slot tras el grid y las páginas internas uno antes del footer. Los anuncios siempre van etiquetados
-como «Publicidad» y nunca tapan el resultado.
+validar el layout. La home tiene un slot tras el grid y las páginas internas uno antes del footer.
+Los anuncios siempre van etiquetados como «Publicidad» y nunca tapan el resultado.
+
+## Analítica y Search Console
+
+Todo se activa con variables en `.env` (ver `.env.example`, el archivo no se sube al repo):
+
+| Variable | Uso |
+|---|---|
+| `PUBLIC_GA_ID` | ID de medición de GA4 (`G-...`) |
+| `PUBLIC_GSC_VERIFICATION` | Valor del meta tag de Search Console |
+| `PUBLIC_ADSENSE_CLIENT` / `PUBLIC_ADSENSE_SLOT` | Anuncios |
+
+`src/components/Analytics.astro` muestra un aviso de cookies y **solo carga GA4/AdSense si el
+visitante acepta**. Si rechaza, no se descarga ningún script de terceros. El meta de verificación
+de Search Console se emite en el `<head>` de todas las páginas cuando existe la variable.
+
+Pasos para activarlo:
+
+1. GA4: Administrar → Crear propiedad → flujo de datos web con la URL del sitio → copiar `G-...`.
+2. Search Console: añadir propiedad por prefijo de URL → verificación por etiqueta HTML → copiar el
+   valor de `content`.
+3. Enviar el sitemap: `https://edumilla1994.github.io/calcula-pe/sitemap-index.xml`.
+4. Crear `.env`, correr `npm run build` y desplegar.
 
 ## Calculadoras implementadas
 
