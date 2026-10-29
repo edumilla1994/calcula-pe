@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://edumilla1994.github.io/calcula-pe/sitemap-index.xml
