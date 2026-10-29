@@ -28,9 +28,26 @@ Sitio de calculadoras financieras para Perú, gratis y sin registro. Todo se cal
 
 ## Diseño
 
-Dirección visual tomada de Open Design (`modern-minimal`) y del design system **Stripe**:
-bordes hairline, radios de 6–10 px, sin sombras decorativas, números tabulares y header sticky claro.
-Paleta: navy `#0a2540`, dorado `#f5b301` y gris frío `#f6f8fa`. Todo el sistema vive en `src/styles/global.css`.
+Home orientada a conversión: calculadora de sueldo neto en vivo dentro del hero, buscador con filtros
+por categoría, tarjetas con iconos SVG y franja de normas. Dirección visual tomada de Open Design
+(`modern-minimal`) y del design system **Stripe**: bordes hairline, radios de 6–10 px, sin sombras
+decorativas, números tabulares y header sticky claro. Paleta: navy `#0a2540`, dorado `#f5b301` y
+gris frío `#f6f8fa`. Todo el sistema vive en `src/styles/global.css`.
+
+## Publicidad (AdSense)
+
+El componente `src/components/AdSlot.astro` reserva el espacio y carga el anuncio solo si existen
+las variables:
+
+```bash
+PUBLIC_ADSENSE_CLIENT=ca-pub-XXXXXXXXXXXXXXXX
+PUBLIC_ADSENSE_SLOT=XXXXXXXXXX
+```
+
+Sin variables no se renderiza nada en producción. En desarrollo se ve un placeholder punteado para
+validar el layout. El script de AdSense se carga una sola vez desde `Base.astro`; la home tiene un
+slot tras el grid y las páginas internas uno antes del footer. Los anuncios siempre van etiquetados
+como «Publicidad» y nunca tapan el resultado.
 
 ## Calculadoras implementadas
 

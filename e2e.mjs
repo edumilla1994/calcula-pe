@@ -81,8 +81,18 @@ const r10 = await run("Liquidación", "liquidacion/", async (p) => {
   await p.fill("#cese", "2026-06-30");
 }, "#liq-total");
 
+await page.goto(base, { waitUntil: "networkidle" });
+await page.fill("#q-sueldo", "3000");
+await page.selectOption("#q-sistema", "afp");
+await page.waitForTimeout(200);
+const r11 = (await page.textContent("#q-neto"))?.trim();
+await page.fill("#calc-search", "cts");
+await page.waitForTimeout(200);
+const filtradas = await page.$$eval("#calc-grid .card:not([hidden])", (els) => els.length);
+console.log(`Sueldo rápido (hero): ${r11} | Buscador "cts": ${filtradas} resultado(s)`);
+
 console.log("\nRESULTADOS:");
-console.log({ cts: r1, gratificacion: r2, indemnizacion: r3, igv: r4, prestamo: r5, sueldoNeto: r6, afpOnp: r7, renta4: r8, renta5: r9, liquidacion: r10 });
+console.log({ cts: r1, gratificacion: r2, indemnizacion: r3, igv: r4, prestamo: r5, sueldoNeto: r6, afpOnp: r7, renta4: r8, renta5: r9, liquidacion: r10, hero: r11, busqueda: filtradas });
 console.log("Errores JS:", errors.length ? errors : "ninguno");
 
 await browser.close();

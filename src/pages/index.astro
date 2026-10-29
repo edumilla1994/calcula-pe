@@ -1,19 +1,83 @@
 ---
 import Base from '../layouts/Base.astro';
+import AdSlot from '../components/AdSlot.astro';
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 const url = (p = '') => base + p.replace(/^\//, '');
 
+const svg = (paths) =>
+  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+
 const tools = [
-  { href: 'sueldo-neto/', name: 'Sueldo neto', icon: 'NETO', desc: 'Cuánto te depositan de verdad, con descuentos de ONP o AFP y renta de quinta.' },
-  { href: 'cts/', name: 'CTS', icon: 'CTS', desc: 'Calcula el depósito de Compensación por Tiempo de Servicio de mayo o noviembre.' },
-  { href: 'gratificacion/', name: 'Gratificación', icon: 'GRA', desc: 'Gratificación de julio o diciembre, con bonificación del 9% y descuentos.' },
-  { href: 'liquidacion/', name: 'Liquidación', icon: 'LIQ', desc: 'CTS, gratificación y vacaciones truncas al terminar la relación laboral.' },
-  { href: 'indemnizacion/', name: 'Indemnización', icon: 'IND', desc: 'Indemnización por despido arbitrario: 1.5 sueldos por año, tope 12 sueldos.' },
-  { href: 'renta-quinta/', name: 'Renta 5ta', icon: '5TA', desc: 'Impuesto a la renta de trabajadores en planilla: tramos, 7 UIT y retención mensual.' },
-  { href: 'renta-cuarta/', name: 'Renta 4ta', icon: '4TA', desc: 'Retención del 8% por honorarios, impuesto anual y saldo a favor o por pagar.' },
-  { href: 'afp-vs-onp/', name: 'AFP vs ONP', icon: 'AFP', desc: 'Compara el descuento mensual y la pensión estimada de cada sistema.' },
-  { href: 'igv/', name: 'IGV', icon: 'IGV', desc: 'Agrega o extrae el IGV (18%) de cualquier monto, al instante.' },
-  { href: 'prestamo/', name: 'Préstamo', icon: 'TEA', desc: 'Cuota mensual, intereses y cronograma con tasa efectiva anual (TEA).' },
+  {
+    href: 'sueldo-neto/',
+    name: 'Sueldo neto',
+    cat: 'trabajo',
+    desc: 'Cuánto te depositan de verdad, con ONP o AFP y renta de quinta.',
+    icon: svg('<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.2"/><path d="M6 12h.01M18 12h.01"/>'),
+  },
+  {
+    href: 'cts/',
+    name: 'CTS',
+    cat: 'trabajo',
+    desc: 'El depósito de mayo o noviembre, con asignación familiar y gratificación.',
+    icon: svg('<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M8 4v6M16 4v6"/>'),
+  },
+  {
+    href: 'gratificacion/',
+    name: 'Gratificación',
+    cat: 'trabajo',
+    desc: 'Julio o diciembre, con el bono del 9% y los descuentos de ley.',
+    icon: svg('<rect x="3" y="8" width="18" height="13" rx="2"/><path d="M12 8v13M3 12h18"/><path d="M7.5 8a2.5 2.5 0 1 1 0-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 1 1 0 5"/>'),
+  },
+  {
+    href: 'liquidacion/',
+    name: 'Liquidación',
+    cat: 'trabajo',
+    desc: 'CTS, gratificación y vacaciones truncas cuando termina el trabajo.',
+    icon: svg('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/>'),
+  },
+  {
+    href: 'indemnizacion/',
+    name: 'Indemnización',
+    cat: 'trabajo',
+    desc: 'Despido arbitrario: 1.5 sueldos por año, con el tope de 12 sueldos.',
+    icon: svg('<path d="M12 3v18M3 7h18"/><path d="M6 7l-3 6a3 3 0 0 0 6 0zM18 7l-3 6a3 3 0 0 0 6 0z"/>'),
+  },
+  {
+    href: 'renta-quinta/',
+    name: 'Renta 5ta',
+    cat: 'impuestos',
+    desc: 'El impuesto de planilla: 7 UIT, tramos de 8% a 30% y retención mensual.',
+    icon: svg('<line x1="19" y1="5" x2="5" y2="19"/><circle cx="6.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/>'),
+  },
+  {
+    href: 'renta-cuarta/',
+    name: 'Renta 4ta',
+    cat: 'impuestos',
+    desc: 'Retención del 8% por honorarios y el saldo de la declaración anual.',
+    icon: svg('<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1V2l-2 1-2-1-2 1-2-1-2 1-2-1z"/><path d="M8 7h8M8 11h8M8 15h5"/>'),
+  },
+  {
+    href: 'igv/',
+    name: 'IGV',
+    cat: 'impuestos',
+    desc: 'Agrega o extrae el 18% de cualquier monto, al instante.',
+    icon: svg('<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.4"/>'),
+  },
+  {
+    href: 'afp-vs-onp/',
+    name: 'AFP vs ONP',
+    cat: 'dinero',
+    desc: 'Cuánto descuenta cada sistema y qué pensión te espera.',
+    icon: svg('<path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="7"/><rect x="13" y="6" width="3" height="11"/>'),
+  },
+  {
+    href: 'prestamo/',
+    name: 'Préstamo',
+    cat: 'dinero',
+    desc: 'Cuota mensual, intereses y cronograma con tasa efectiva anual.',
+    icon: svg('<rect x="4" y="2" width="16" height="20" rx="2"/><rect x="7" y="5" width="10" height="4" rx="1"/><path d="M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01M16 17h.01"/>'),
+  },
 ];
 
 const schema = {
@@ -26,111 +90,224 @@ const schema = {
 };
 ---
 <Base
-  title="Calcula Perú — Calculadoras de sueldo neto, CTS e impuestos"
-  description="Calculadoras gratuitas y actualizadas para Perú: sueldo neto, CTS, gratificación, liquidación, renta de 4ta y 5ta, AFP vs ONP, IGV y préstamos."
+  title="Calcula Perú — Calcula tu sueldo neto, CTS e impuestos"
+  description="Calcula tu sueldo neto, CTS, gratificación, liquidación, renta de 4ta y 5ta, AFP vs ONP e IGV. Gratis, sin registro y con las tasas de Perú 2026."
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
   <section class="hero">
     <div class="container hero-grid">
-      <div>
-        <span class="badge">Gratis · Sin registro · Perú 2026</span>
-        <h1>Calcula tu sueldo, CTS e impuestos al instante.</h1>
+      <div class="hero-copy">
+        <span class="badge">Actualizado · Perú 2026</span>
+        <h1>¿Cuánto te van a pagar de verdad?</h1>
         <p>
-          Diez calculadoras para saber cuánto te corresponde de verdad. Fórmulas explicadas,
-          tasas actualizadas y resultados en segundos.
+          Escribe tu sueldo y mira al instante lo que te queda después de ONP o AFP.
+          Sin registro, sin letra pequeña y sin adivinar.
         </p>
-        <div class="hero-actions">
-          <a class="btn gold" href="#calculadoras">Ver las 10 calculadoras</a>
-          <span class="hero-note">Sin crear cuenta · Sin datos personales</span>
-        </div>
-        <div class="chips">
-          <a href={url('sueldo-neto/')}>Sueldo neto</a>
-          <a href={url('cts/')}>CTS</a>
-          <a href={url('gratificacion/')}>Gratificación</a>
-          <a href={url('liquidacion/')}>Liquidación</a>
-          <a href={url('renta-quinta/')}>Renta 5ta</a>
-          <a href={url('igv/')}>IGV</a>
-        </div>
+        <ul class="hero-trust">
+          <li>10 calculadoras</li>
+          <li>Tasas 2026</li>
+          <li>100% gratis</li>
+        </ul>
       </div>
 
-      <aside class="preview" aria-hidden="true">
-        <div class="preview-head">
-          <span>Vista previa</span>
-          <span class="preview-tag">Al instante</span>
+      <div class="quick-calc" aria-labelledby="quick-title">
+        <div class="quick-head">
+          <strong id="quick-title">Calculadora rápida</strong>
+          <span class="quick-live">En vivo</span>
         </div>
-        <div class="preview-label">Sueldo neto mensual</div>
-        <div class="preview-amount">S/ 1,740.00</div>
-        <div class="preview-row"><span>Sueldo bruto</span><b>S/ 2,000.00</b></div>
-        <div class="preview-row"><span>ONP (13%)</span><b>− S/ 260.00</b></div>
-        <div class="preview-row"><span>Renta de quinta</span><b>S/ 0.00</b></div>
-        <div class="preview-foot">Cálculo referencial con la UIT 2026 de S/ 5,500.</div>
-      </aside>
+        <label for="q-sueldo">Tu sueldo bruto mensual</label>
+        <div class="quick-input">
+          <span>S/</span>
+          <input id="q-sueldo" name="sueldo" type="number" inputmode="decimal" min="0" step="50" value="2000" autocomplete="off" />
+        </div>
+        <label for="q-sistema">Sistema de pensiones</label>
+        <select id="q-sistema" name="sistema">
+          <option value="onp">ONP (13%)</option>
+          <option value="afp">AFP Habitat (12.84%)</option>
+        </select>
+        <div class="quick-result" aria-live="polite">
+          <span>Te depositan</span>
+          <strong id="q-neto">S/ 1,740.00</strong>
+          <small id="q-desc">ONP: S/ 260.00 de descuento</small>
+        </div>
+        <a class="btn gold quick-btn" href={url('sueldo-neto/')}>
+          Ver el desglose completo
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
     </div>
   </section>
 
+  <section class="container search-section">
+    <div class="search-box">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+        <circle cx="11" cy="11" r="7"></circle>
+        <path d="m20 20-3.2-3.2"></path>
+      </svg>
+      <label class="sr-only" for="calc-search">Buscar calculadora</label>
+      <input id="calc-search" type="search" placeholder="Busca: CTS, sueldo neto, renta, IGV…" autocomplete="off" />
+    </div>
+    <div class="filters" role="group" aria-label="Filtrar por categoría">
+      <button class="filter is-active" type="button" data-filter="todas">Todas <span>10</span></button>
+      <button class="filter" type="button" data-filter="trabajo">Trabajo <span>5</span></button>
+      <button class="filter" type="button" data-filter="impuestos">Impuestos <span>3</span></button>
+      <button class="filter" type="button" data-filter="dinero">Dinero <span>2</span></button>
+    </div>
+    <p class="search-count" id="search-count" aria-live="polite">10 calculadoras disponibles</p>
+  </section>
+
   <section class="container" id="calculadoras">
-    <div class="stats">
-      <div class="stat"><b>10</b><span>calculadoras gratuitas</span></div>
-      <div class="stat"><b>0</b><span>registros ni datos personales</span></div>
-      <div class="stat"><b>2026</b><span>normas y tasas actualizadas</span></div>
-    </div>
-
-    <div class="section-head">
-      <div>
-        <h2>Elige tu cálculo</h2>
-        <p>Del sueldo neto a la liquidación completa, todo en un solo lugar.</p>
-      </div>
-    </div>
-
-    <div class="grid">
+    <div class="grid" id="calc-grid">
       {tools.map((t, i) => (
-        <article class="card">
+        <a class="card" href={url(t.href)} data-name={t.name.toLowerCase() + ' ' + t.desc.toLowerCase()} data-cat={t.cat}>
           <div class="card-top">
-            <span class="card-icon">{t.icon}</span>
+            <span class="card-icon" set:html={t.icon} />
             <span class="card-index">{String(i + 1).padStart(2, '0')}</span>
           </div>
-          <h3>{t.name}</h3>
+          <h2>{t.name}</h2>
           <p>{t.desc}</p>
-          <a class="card-link" href={url(t.href)}>Calcular ahora <span aria-hidden="true">→</span></a>
-        </article>
+          <span class="card-link">Calcular ahora <span aria-hidden="true">→</span></span>
+        </a>
       ))}
+    </div>
+    <p class="empty" id="calc-empty" hidden>No encontramos esa calculadora. Prueba con «sueldo», «CTS» o «renta».</p>
+  </section>
+
+  <AdSlot />
+
+  <section class="container trust">
+    <div class="trust-item">
+      <strong>DL 650</strong>
+      <span>CTS y beneficios sociales</span>
+    </div>
+    <div class="trust-item">
+      <strong>Ley 27735</strong>
+      <span>Gratificaciones y bonos</span>
+    </div>
+    <div class="trust-item">
+      <strong>SUNAT 2026</strong>
+      <span>UIT S/ 5,500 y rentas</span>
     </div>
   </section>
 
   <section class="container explain">
     <div class="panel">
-      <h2>¿Por qué usar estas calculadoras?</h2>
+      <h2>Pensado para resolver, no para leer</h2>
       <p>
-        Los cálculos laborales en Perú dependen de varios factores: remuneración computable, meses y días
-        trabajados, gratificación, asignación familiar, régimen de salud y descuentos. Un error de un solo
-        número cambia el resultado.
+        Cada calculadora te pide solo los datos que importan y te devuelve el resultado en el mismo
+        lugar donde escribes. Sin formularios eternos ni pasos intermedios.
       </p>
       <p>
-        Aquí tienes las fórmulas explicadas y actualizadas para 2026, con resultados referenciales que puedes
-        contrastar con tu boleta o con el área de Recursos Humanos.
+        Los cálculos siguen las normas peruanas vigentes en 2026: CTS (DL 650), gratificaciones
+        (Ley 27735), rentas de trabajo (SUNAT) y préstamos por sistema francés. Cada página explica
+        la fórmula y responde las dudas más comunes.
       </p>
+      <h2>Qué puedes calcular</h2>
       <ul>
-        <li>Sueldo neto: descuentos de ONP o AFP y retención de renta de quinta.</li>
-        <li>CTS: depósito semestral (mayo y noviembre) según el DL 650.</li>
-        <li>Gratificación: Ley 27735, con bonificación extraordinaria del 9% (EsSalud) o 6.75% (EPS).</li>
-        <li>Liquidación: CTS, gratificación y vacaciones truncas al cese.</li>
-        <li>Indemnización: despido arbitrario, 1.5 sueldos por año con tope de 12 sueldos.</li>
-        <li>Renta 4ta: retención del 8% por honorarios y regularización anual.</li>
-        <li>Renta 5ta: 7 UIT de deducción y tramos de 8% a 30%.</li>
-        <li>AFP vs ONP: descuento mensual y pensión estimada.</li>
-        <li>IGV: 18% (16% IGV + 2% IPM).</li>
-        <li>Préstamo: sistema francés, tasa efectiva anual convertida a mensual.</li>
+        <li><strong>Trabajo:</strong> sueldo neto, CTS, gratificación, liquidación e indemnización.</li>
+        <li><strong>Impuestos:</strong> renta de 4ta, renta de 5ta e IGV.</li>
+        <li><strong>Dinero:</strong> AFP vs ONP y cuotas de préstamo.</li>
       </ul>
     </div>
     <aside class="panel">
       <h2>Antes de confiar en el número</h2>
       <p>
-        Estas herramientas son referenciales. No reemplazan una liquidación oficial ni asesoría contable o legal.
-        Si el resultado no coincide con tu boleta, revisa los datos de entrada o consulta con un profesional.
+        Los resultados son referenciales. No reemplazan una liquidación oficial ni asesoría contable
+        o legal. Si no coincide con tu boleta, revisa los datos o consulta con un profesional.
       </p>
       <p>
-        ¿Falta una calculadora? Escríbenos desde la página de <a href={url('contacto/')}>contacto</a> y la evaluamos.
+        ¿Falta una calculadora? Escríbenos desde <a href={url('contacto/')}>contacto</a> y la evaluamos.
+      </p>
+      <p class="hint">
+        Este sitio se financia con publicidad. Los anuncios se marcan como tales y nunca ocultan el
+        resultado de tu cálculo.
       </p>
     </aside>
   </section>
+
+  <script is:inline>
+    (() => {
+      const fmt = (n) => new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 2 }).format(n);
+      const UIT = 5500;
+      const TRAMOS = [
+        { hasta: 5 * UIT, tasa: 0.08 },
+        { hasta: 20 * UIT, tasa: 0.14 },
+        { hasta: 35 * UIT, tasa: 0.17 },
+        { hasta: 45 * UIT, tasa: 0.20 },
+        { hasta: Infinity, tasa: 0.30 },
+      ];
+      const impuesto = (base) => {
+        let restante = base;
+        let anterior = 0;
+        let total = 0;
+        for (const t of TRAMOS) {
+          const tramo = Math.min(restante, t.hasta - anterior);
+          if (tramo <= 0) break;
+          total += tramo * t.tasa;
+          restante -= tramo;
+          anterior = t.hasta;
+        }
+        return total;
+      };
+
+      const sueldo = document.getElementById('q-sueldo');
+      const sistema = document.getElementById('q-sistema');
+      const neto = document.getElementById('q-neto');
+      const desc = document.getElementById('q-desc');
+
+      const calcular = () => {
+        const bruto = Math.max(0, parseFloat(sueldo.value) || 0);
+        const esAfp = sistema.value === 'afp';
+        const pension = esAfp
+          ? bruto * (0.10 + 0.0147) + Math.min(bruto, 12209.11) * 0.0137
+          : bruto * 0.13;
+        const anual = bruto * 12 * (1 + 1 / 6);
+        const renta = impuesto(Math.max(0, anual - 7 * UIT)) / 12;
+        const total = Math.min(bruto, pension + renta);
+        neto.textContent = fmt(Math.max(0, bruto - total));
+        desc.textContent = (esAfp ? 'AFP: ' : 'ONP: ') + fmt(pension) + ' de descuento' + (renta > 0 ? ' + renta' : '');
+      };
+
+      sueldo.addEventListener('input', calcular);
+      sistema.addEventListener('change', calcular);
+      calcular();
+
+      // Buscador y filtros
+      const grid = document.getElementById('calc-grid');
+      const cards = [...grid.querySelectorAll('.card')];
+      const search = document.getElementById('calc-search');
+      const chips = [...document.querySelectorAll('.filter')];
+      const count = document.getElementById('search-count');
+      const empty = document.getElementById('calc-empty');
+      let cat = 'todas';
+
+      const aplicar = () => {
+        const q = search.value.trim().toLowerCase();
+        let visibles = 0;
+        for (const card of cards) {
+          const coincideTexto = !q || card.dataset.name.includes(q);
+          const coincideCat = cat === 'todas' || card.dataset.cat === cat;
+          const mostrar = coincideTexto && coincideCat;
+          card.hidden = !mostrar;
+          if (mostrar) visibles++;
+        }
+        empty.hidden = visibles > 0;
+        count.textContent = visibles === 1 ? '1 calculadora disponible' : visibles + ' calculadoras disponibles';
+      };
+
+      search.addEventListener('input', aplicar);
+      chips.forEach((chip) => {
+        chip.addEventListener('click', () => {
+          cat = chip.dataset.filter;
+          chips.forEach((c) => {
+            c.classList.toggle('is-active', c === chip);
+            c.setAttribute('aria-pressed', c === chip ? 'true' : 'false');
+          });
+          aplicar();
+        });
+      });
+      chips.forEach((c) => c.setAttribute('aria-pressed', c.classList.contains('is-active') ? 'true' : 'false'));
+    })();
+  </script>
 </Base>

@@ -1,10 +1,14 @@
 ---
 import '../styles/global.css';
+import AdSlot from '../components/AdSlot.astro';
 
 const { title, description } = Astro.props;
 const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
 const url = (p = '') => base + p.replace(/^\//, '');
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const adsClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
+const path = Astro.url.pathname.replace(/\/$/, '');
+const esHome = path === base.replace(/\/$/, '');
 ---
 <!doctype html>
 <html lang="es-PE">
@@ -21,9 +25,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content="es_PE" />
     <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    {adsClient && (
+      <script
+        is:inline
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adsClient}`}
+        crossorigin="anonymous"
+      ></script>
+    )}
     <slot name="head" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Saltar al contenido</a>
     <header class="site-header">
       <div class="container bar">
         <a class="brand" href={url('')}>
@@ -36,16 +49,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
           <a href={url('gratificacion/')}>Gratificación</a>
           <a href={url('liquidacion/')}>Liquidación</a>
           <a href={url('renta-quinta/')}>Renta 5ta</a>
-          <a href={url('afp-vs-onp/')}>AFP vs ONP</a>
-          <a href={url('igv/')}>IGV</a>
-          <a href={url('prestamo/')}>Préstamo</a>
+          <a href={url('') + '#calculadoras'}>Ver todas</a>
         </nav>
       </div>
     </header>
 
-    <main>
+    <main id="main">
       <slot />
     </main>
+
+    {!esHome && <AdSlot />}
 
     <footer class="site-footer">
       <div class="container footer-grid">
