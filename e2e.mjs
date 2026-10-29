@@ -1,7 +1,7 @@
 import { chromium } from "playwright-core";
 
 const exe = "C:/Users/edumi/AppData/Local/ms-playwright/chromium-1243/chrome-win64/chrome.exe";
-const base = "https://edumilla1994.github.io/calcula-pe/";
+const base = process.env.BASE_URL || "https://edumilla1994.github.io/calcula-pe/";
 const browser = await chromium.launch({ executablePath: exe, headless: true });
 const page = await browser.newPage();
 const errors = [];

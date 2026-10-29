@@ -36,10 +36,7 @@ npm run deploy   # GitHub Pages: build base /calcula-pe + rama gh-pages
 Cloudflare Pages (raíz `/`):
 
 ```powershell
-$env:BASE_PATH="/"; $env:SITE_URL="https://calcula-pe.pages.dev"
-npm run build
-wrangler pages deploy dist --project-name calcula-pe --branch main
-Remove-Item Env:BASE_PATH, Env:SITE_URL
+npm run deploy:cf
 ```
 
 GitHub Pages sirve la rama `gh-pages` en https://edumilla1994.github.io/calcula-pe/.
