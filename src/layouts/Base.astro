@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+
+const { title, description } = Astro.props;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+---
+<!doctype html>
+<html lang="es-PE">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#0f2a44" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="es_PE" />
+    <link rel="icon" href={url('favicon.svg')} type="image/svg+xml" />
+    <slot name="head" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container bar">
+        <a class="brand" href={url('')}>
+          <span class="mark">S/</span>
+          Calcula Perú
+        </a>
+        <nav class="nav" aria-label="Principal">
+          <a href={url('cts/')}>CTS</a>
+          <a href={url('gratificacion/')}>Gratificación</a>
+          <a href={url('indemnizacion/')}>Indemnización</a>
+          <a href={url('igv/')}>IGV</a>
+          <a href={url('prestamo/')}>Préstamo</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <strong>Calcula Perú</strong>
+          <p style="margin:6px 0 0">Calculadoras gratuitas para sueldos, beneficios y trámites del Perú.</p>
+        </div>
+        <div>
+          <a href={url('sobre/')}>Sobre el sitio</a> ·
+          <a href={url('privacidad/')}>Privacidad</a> ·
+          <a href={url('contacto/')}>Contacto</a>
+        </div>
+      </div>
+      <div class="container disclaimer">
+        Los resultados son referenciales y no reemplazan una liquidación oficial, una consulta contable ni asesoría legal.
+        Verifica siempre con tu empleador, SUNAT o un profesional. © 2026 Calcula Perú.
+      </div>
+    </footer>
+  </body>
+</html>

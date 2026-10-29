@@ -1,0 +1,34 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+---
+<Base
+  title="Sobre Calcula Perú — Metodología y alcance"
+  description="Qué es Calcula Perú, cómo se calculan los resultados y cuáles son los límites de las calculadoras laborales y tributarias."
+>
+  <div class="container page">
+    <h1>Sobre Calcula Perú</h1>
+    <p>
+      Calcula Perú es un conjunto de calculadoras gratuitas para resolver dudas frecuentes sobre sueldos,
+      beneficios sociales e impuestos en el Perú. No pedimos registro ni guardamos los montos que ingresas:
+      todo el cálculo ocurre en tu navegador.
+    </p>
+    <h2>Metodología</h2>
+    <ul>
+      <li><strong>CTS:</strong> Decreto Legislativo 650. Remuneración computable = sueldo + asignación familiar + 1/6 de la última gratificación; depósito = RC/12 × meses + RC/360 × días.</li>
+      <li><strong>Gratificación:</strong> Ley 27735 y su reglamento. Equivale a una remuneración por semestre, proporcional a los meses trabajados; bonificación del 9% (EsSalud) o 6.75% (EPS).</li>
+      <li><strong>Indemnización:</strong> despido arbitrario en contrato indeterminado, 1.5 sueldos por año o fracción, tope 12 sueldos.</li>
+      <li><strong>IGV:</strong> 18% (16% IGV + 2% IPM).</li>
+      <li><strong>Préstamo:</strong> sistema francés, TEA convertida a tasa mensual equivalente.</li>
+    </ul>
+    <h2>Alcance y límites</h2>
+    <p>
+      Los resultados son <strong>referenciales</strong>. No constituyen una liquidación oficial, asesoría
+      contable, tributaria ni legal. Las normas y tasas pueden cambiar; verifica siempre con tu empleador,
+      SUNAT, tu banco o un profesional.
+    </p>
+    <h2>Contacto</h2>
+    <p>¿Sugerencias o encontraste un error? Escríbenos desde la página de <a href={url('contacto/')}>contacto</a>.</p>
+  </div>
+</Base>

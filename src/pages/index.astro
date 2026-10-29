@@ -1,0 +1,89 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+
+const tools = [
+  { href: 'cts/', name: 'CTS', desc: 'Calcula el depósito de Compensación por Tiempo de Servicio de mayo o noviembre.' },
+  { href: 'gratificacion/', name: 'Gratificación', desc: 'Gratificación de julio o diciembre, con bonificación del 9% y descuentos.' },
+  { href: 'indemnizacion/', name: 'Indemnización', desc: 'Indemnización por despido arbitrario: 1.5 sueldos por año, tope 12 sueldos.' },
+  { href: 'igv/', name: 'IGV', desc: 'Agrega o extrae el IGV (18%) de cualquier monto, al instante.' },
+  { href: 'prestamo/', name: 'Préstamo', desc: 'Cuota mensual, intereses y cronograma con tasa efectiva anual (TEA).' },
+];
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'Calcula Perú',
+  url: new URL(base, Astro.site).href,
+  description: 'Calculadoras gratuitas para sueldos, beneficios sociales e impuestos del Perú.',
+  inLanguage: 'es-PE',
+};
+---
+<Base
+  title="Calcula Perú — Calculadoras de sueldo, CTS, gratificación e IGV"
+  description="Calculadoras gratuitas y actualizadas para Perú: CTS, gratificación, indemnización, IGV y préstamos. Resultados al instante, sin registro."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <section class="hero">
+    <div class="container">
+      <span class="badge">Gratis · Sin registro · Perú 2026</span>
+      <h1>Calcula tu CTS, gratificación e IGV al toque.</h1>
+      <p>
+        Herramientas simples para saber cuánto te corresponde de verdad. Sin formularios eternos,
+        sin crear cuenta y sin letra chica. Elige una calculadora y listo.
+      </p>
+      <div class="chips">
+        <a href={url('cts/')}>CTS</a>
+        <a href={url('gratificacion/')}>Gratificación</a>
+        <a href={url('indemnizacion/')}>Indemnización</a>
+        <a href={url('igv/')}>IGV</a>
+        <a href={url('prestamo/')}>Préstamo</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="container">
+    <div class="grid">
+      {tools.map((t) => (
+        <article class="card">
+          <h3>{t.name}</h3>
+          <p>{t.desc}</p>
+          <a class="btn" href={url(t.href)}>Calcular ahora</a>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="container explain">
+    <div class="panel">
+      <h2>¿Por qué usar estas calculadoras?</h2>
+      <p>
+        Los cálculos laborales en Perú dependen de varios factores: remuneración computable, meses y días
+        trabajados, gratificación, asignación familiar, régimen de salud y descuentos. Un error de un solo
+        número cambia el resultado.
+      </p>
+      <p>
+        Aquí tienes las fórmulas explicadas y actualizadas para 2026, con resultados referenciales que puedes
+        contrastar con tu boleta o con el área de Recursos Humanos.
+      </p>
+      <ul>
+        <li>CTS: Depósito semestral (mayo y noviembre) según el DL 650.</li>
+        <li>Gratificación: Ley 27735, con bonificación extraordinaria del 9% (EsSalud) o 6.75% (EPS).</li>
+        <li>Indemnización: despido arbitrario, 1.5 sueldos por año con tope de 12 sueldos.</li>
+        <li>IGV: 18% (16% IGV + 2% IPM).</li>
+        <li>Préstamo: sistema francés, tasa efectiva anual convertida a mensual.</li>
+      </ul>
+    </div>
+    <aside class="panel">
+      <h2>Antes de confiar en el número</h2>
+      <p>
+        Estas herramientas son referenciales. No reemplazan una liquidación oficial ni asesoría contable o legal.
+        Si el resultado no coincide con tu boleta, revisa los datos de entrada o consulta con un profesional.
+      </p>
+      <p>
+        ¿Falta una calculadora? Escríbenos desde la página de <a href={url('contacto/')}>contacto</a> y la evaluamos.
+      </p>
+    </aside>
+  </section>
+</Base>

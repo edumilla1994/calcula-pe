@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+---
+<Base
+  title="Política de privacidad — Calcula Perú"
+  description="Cómo trata Calcula Perú tus datos: cálculos en el navegador, cookies, analítica y publicidad."
+>
+  <div class="container page">
+    <h1>Política de privacidad</h1>
+    <p><em>Última actualización: octubre de 2026.</em></p>
+
+    <h2>1. Datos que ingresas</h2>
+    <p>
+      Los montos, sueldos y plazos que escribes en las calculadoras se procesan <strong>localmente en tu
+      navegador</strong>. No se envían a nuestros servidores ni se almacenan en una base de datos.
+    </p>
+
+    <h2>2. Cookies y analítica</h2>
+    <p>
+      Podemos usar herramientas de analítica (por ejemplo, Google Analytics) para entender cuántas personas
+      visitan el sitio y qué calculadoras son más útiles. Esa información es agregada y no te identifica
+      directamente. También podemos usar Cloudflare Web Analytics, que no utiliza cookies.
+    </p>
+
+    <h2>3. Publicidad</h2>
+    <p>
+      En el futuro el sitio puede mostrar anuncios de Google AdSense u otras redes. Esos proveedores pueden
+      usar cookies para personalizar anuncios. Si eso ocurre, se mostrará un aviso de cookies y podrás
+      aceptar o rechazar según corresponda.
+    </p>
+
+    <h2>4. Enlaces externos</h2>
+    <p>
+      El sitio puede enlazar a páginas de terceros (SUNAT, bancos, calculadoras oficiales). No somos
+      responsables de sus políticas de privacidad ni de su contenido.
+    </p>
+
+    <h2>5. Tus derechos</h2>
+    <p>
+      De acuerdo con la Ley 29733 (Protección de Datos Personales) y su reglamento, puedes solicitar
+      información, rectificación o eliminación de datos escribiendo a través de la página de
+      <a href={url('contacto/')}>contacto</a>. Como no almacenamos los montos ingresados, no hay datos
+      financieros que podamos eliminar.
+    </p>
+
+    <h2>6. Cambios</h2>
+    <p>Podemos actualizar esta política. La fecha de la última actualización aparece al inicio.</p>
+  </div>
+</Base>

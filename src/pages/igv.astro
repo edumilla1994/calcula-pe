@@ -1,0 +1,109 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+
+const faq = [
+  { q: '¿Cuánto es el IGV en Perú?', a: 'El IGV es 18%: 16% de IGV más 2% de Impuesto de Promoción Municipal (IPM).' },
+  { q: '¿Cómo saco el IGV de un precio final?', a: 'Divide el precio final entre 1.18. El resultado es la base sin IGV; la diferencia es el IGV.' },
+  { q: '¿Todos los productos pagan IGV?', a: 'No. Hay operaciones exoneradas e inafectas (por ejemplo, algunos alimentos y servicios educativos). Verifica el comprobante.' },
+];
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Calculadora de IGV Perú 2026',
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'PEN' },
+  inLanguage: 'es-PE',
+};
+---
+<Base
+  title="Calculadora de IGV 2026 Perú — Agregar o quitar 18%"
+  description="Calcula el IGV (18%) de cualquier monto en Perú: agrégalo a un precio sin IGV o extráelo de un precio final. Resultado inmediato y fórmula explicada."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <div class="container tool">
+    <section class="panel">
+      <h1>Calculadora de IGV 2026</h1>
+      <p class="sub">Agrega el IGV a un monto neto o extrae el IGV de un precio final.</p>
+      <form id="igv-form">
+        <label for="monto">Monto (S/)</label>
+        <input id="monto" type="number" min="0" step="0.01" value="100" required />
+
+        <label for="modo">¿Qué quieres hacer?</label>
+        <select id="modo">
+          <option value="agregar">Agregar IGV a un monto sin IGV</option>
+          <option value="extraer">Extraer IGV de un precio final</option>
+        </select>
+
+        <label for="tasa">Tasa de IGV (%)</label>
+        <input id="tasa" type="number" min="0" max="50" step="0.01" value="18" required />
+
+        <button class="btn gold" type="submit" style="margin-top:18px;width:100%">Calcular IGV</button>
+      </form>
+      <div class="warn">Tasa general 18%. Algunas operaciones tienen tasas especiales o están exoneradas.</div>
+    </section>
+
+    <aside class="panel">
+      <h2 style="margin-top:0;color:var(--navy)">Tu resultado</h2>
+      <div class="result">
+        <div style="font-size:.85rem;color:var(--muted)">Total con IGV</div>
+        <div class="big" id="igv-total">S/ 0.00</div>
+        <div class="row"><span>Base imponible</span><b id="igv-base">S/ 0.00</b></div>
+        <div class="row"><span>IGV</span><b id="igv-monto">S/ 0.00</b></div>
+        <div class="row"><span>Tasa aplicada</span><b id="igv-tasa">18%</b></div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="container explain">
+    <div class="panel">
+      <h2>¿Cómo se calcula el IGV?</h2>
+      <p><strong>Para agregar:</strong> IGV = monto × 18%; total = monto + IGV.</p>
+      <p><strong>Para extraer:</strong> base = total ÷ 1.18; IGV = total − base.</p>
+      <p>
+        El IGV en Perú es 18% (16% IGV + 2% IPM). Este cálculo es referencial y no reemplaza la determinación
+        tributaria de tu contador ni el comprobante electrónico.
+      </p>
+      <h2>Ejemplo</h2>
+      <p>
+        Un servicio de S/ 1,000 sin IGV: IGV = S/ 180 y total = S/ 1,180. Si el precio final es S/ 1,180,
+        la base es S/ 1,000 y el IGV S/ 180.
+      </p>
+    </div>
+    <aside class="panel faq">
+      <h2 style="margin-top:0">Preguntas frecuentes</h2>
+      {faq.map((f) => (
+        <details><summary>{f.q}</summary><p>{f.a}</p></details>
+      ))}
+    </aside>
+  </section>
+
+  <script is:inline>
+    (() => {
+      const fmt = (n) => new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 2 }).format(n);
+      const num = (id) => Math.max(0, parseFloat(document.getElementById(id).value) || 0);
+      document.getElementById('igv-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const monto = num('monto');
+        const modo = document.getElementById('modo').value;
+        const tasa = Math.max(0, parseFloat(document.getElementById('tasa').value) || 0) / 100;
+        let base, igv, total;
+        if (modo === 'agregar') {
+          base = monto;
+          igv = monto * tasa;
+          total = monto + igv;
+        } else {
+          total = monto;
+          base = monto / (1 + tasa);
+          igv = monto - base;
+        }
+        document.getElementById('igv-total').textContent = fmt(total);
+        document.getElementById('igv-base').textContent = fmt(base);
+        document.getElementById('igv-monto').textContent = fmt(igv);
+        document.getElementById('igv-tasa').textContent = (tasa * 100).toFixed(2) + '%';
+      });
+    })();
+  </script>
+</Base>

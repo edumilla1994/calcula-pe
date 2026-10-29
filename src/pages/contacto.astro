@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+---
+<Base
+  title="Contacto — Calcula Perú"
+  description="Escríbenos para reportar un error, sugerir una calculadora o consultar sobre el sitio."
+>
+  <div class="container page">
+    <h1>Contacto</h1>
+    <p>
+      ¿Encontraste un error en un cálculo, falta una calculadora o tienes una sugerencia? Escríbenos:
+    </p>
+    <p style="font-size:1.15rem">
+      <a href="mailto:edumilla1994@gmail.com?subject=Calcula%20Per%C3%BA">edumilla1994@gmail.com</a>
+    </p>
+    <p>
+      Respondemos en un plazo de 2 a 3 días hábiles. Si reportas un error, incluye el nombre de la
+      calculadora, los datos que ingresaste y el resultado que esperabas.
+    </p>
+    <h2>Antes de escribir</h2>
+    <ul>
+      <li>Los resultados son referenciales; no emitimos liquidaciones oficiales.</li>
+      <li>No brindamos asesoría legal, contable ni tributaria personalizada.</li>
+      <li>No pedimos contraseñas, números de tarjeta ni datos bancarios.</li>
+    </ul>
+  </div>
+</Base>
