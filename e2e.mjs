@@ -50,8 +50,39 @@ const r5 = await run("Préstamo", "prestamo/", async (p) => {
   await p.fill("#meses", "24");
 }, "#pres-cuota");
 
+const r6 = await run("Sueldo neto", "sueldo-neto/", async (p) => {
+  await p.fill("#sueldo", "2000");
+  await p.selectOption("#sistema", "onp");
+  await p.fill("#meses", "12");
+}, "#neto-total");
+
+const r7 = await run("AFP vs ONP", "afp-vs-onp/", async (p) => {
+  await p.fill("#sueldo", "2000");
+  await p.fill("#edad", "30");
+  await p.fill("#jubilacion", "65");
+  await p.selectOption("#afp", "0.0147");
+}, "#afp-desc");
+
+const r8 = await run("Renta 4ta", "renta-cuarta/", async (p) => {
+  await p.fill("#ingreso", "8000");
+  await p.fill("#meses", "12");
+  await p.selectOption("#retencion", "1");
+}, "#r4-retencion");
+
+const r9 = await run("Renta 5ta", "renta-quinta/", async (p) => {
+  await p.fill("#sueldo", "3000");
+  await p.fill("#meses", "12");
+  await p.fill("#gratificaciones", "6000");
+}, "#r5-impuesto");
+
+const r10 = await run("Liquidación", "liquidacion/", async (p) => {
+  await p.fill("#sueldo", "2000");
+  await p.fill("#ingreso", "2026-01-01");
+  await p.fill("#cese", "2026-06-30");
+}, "#liq-total");
+
 console.log("\nRESULTADOS:");
-console.log({ cts: r1, gratificacion: r2, indemnizacion: r3, igv: r4, prestamo: r5 });
+console.log({ cts: r1, gratificacion: r2, indemnizacion: r3, igv: r4, prestamo: r5, sueldoNeto: r6, afpOnp: r7, renta4: r8, renta5: r9, liquidacion: r10 });
 console.log("Errores JS:", errors.length ? errors : "ninguno");
 
 await browser.close();

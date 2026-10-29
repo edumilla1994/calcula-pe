@@ -4,11 +4,16 @@ const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL :
 const url = (p = '') => base + p.replace(/^\//, '');
 
 const tools = [
-  { href: 'cts/', name: 'CTS', desc: 'Calcula el depósito de Compensación por Tiempo de Servicio de mayo o noviembre.' },
-  { href: 'gratificacion/', name: 'Gratificación', desc: 'Gratificación de julio o diciembre, con bonificación del 9% y descuentos.' },
-  { href: 'indemnizacion/', name: 'Indemnización', desc: 'Indemnización por despido arbitrario: 1.5 sueldos por año, tope 12 sueldos.' },
-  { href: 'igv/', name: 'IGV', desc: 'Agrega o extrae el IGV (18%) de cualquier monto, al instante.' },
-  { href: 'prestamo/', name: 'Préstamo', desc: 'Cuota mensual, intereses y cronograma con tasa efectiva anual (TEA).' },
+  { href: 'sueldo-neto/', name: 'Sueldo neto', icon: 'NETO', desc: 'Cuánto te depositan de verdad, con descuentos de ONP o AFP y renta de quinta.' },
+  { href: 'cts/', name: 'CTS', icon: 'CTS', desc: 'Calcula el depósito de Compensación por Tiempo de Servicio de mayo o noviembre.' },
+  { href: 'gratificacion/', name: 'Gratificación', icon: 'GRA', desc: 'Gratificación de julio o diciembre, con bonificación del 9% y descuentos.' },
+  { href: 'liquidacion/', name: 'Liquidación', icon: 'LIQ', desc: 'CTS, gratificación y vacaciones truncas al terminar la relación laboral.' },
+  { href: 'indemnizacion/', name: 'Indemnización', icon: 'IND', desc: 'Indemnización por despido arbitrario: 1.5 sueldos por año, tope 12 sueldos.' },
+  { href: 'renta-quinta/', name: 'Renta 5ta', icon: '5TA', desc: 'Impuesto a la renta de trabajadores en planilla: tramos, 7 UIT y retención mensual.' },
+  { href: 'renta-cuarta/', name: 'Renta 4ta', icon: '4TA', desc: 'Retención del 8% por honorarios, impuesto anual y saldo a favor o por pagar.' },
+  { href: 'afp-vs-onp/', name: 'AFP vs ONP', icon: 'AFP', desc: 'Compara el descuento mensual y la pensión estimada de cada sistema.' },
+  { href: 'igv/', name: 'IGV', icon: 'IGV', desc: 'Agrega o extrae el IGV (18%) de cualquier monto, al instante.' },
+  { href: 'prestamo/', name: 'Préstamo', icon: 'TEA', desc: 'Cuota mensual, intereses y cronograma con tasa efectiva anual (TEA).' },
 ];
 
 const schema = {
@@ -21,35 +26,72 @@ const schema = {
 };
 ---
 <Base
-  title="Calcula Perú — Calculadoras de sueldo, CTS, gratificación e IGV"
-  description="Calculadoras gratuitas y actualizadas para Perú: CTS, gratificación, indemnización, IGV y préstamos. Resultados al instante, sin registro."
+  title="Calcula Perú — Calculadoras de sueldo neto, CTS e impuestos"
+  description="Calculadoras gratuitas y actualizadas para Perú: sueldo neto, CTS, gratificación, liquidación, renta de 4ta y 5ta, AFP vs ONP, IGV y préstamos."
 >
   <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
   <section class="hero">
-    <div class="container">
-      <span class="badge">Gratis · Sin registro · Perú 2026</span>
-      <h1>Calcula tu CTS, gratificación e IGV al toque.</h1>
-      <p>
-        Herramientas simples para saber cuánto te corresponde de verdad. Sin formularios eternos,
-        sin crear cuenta y sin letra chica. Elige una calculadora y listo.
-      </p>
-      <div class="chips">
-        <a href={url('cts/')}>CTS</a>
-        <a href={url('gratificacion/')}>Gratificación</a>
-        <a href={url('indemnizacion/')}>Indemnización</a>
-        <a href={url('igv/')}>IGV</a>
-        <a href={url('prestamo/')}>Préstamo</a>
+    <div class="container hero-grid">
+      <div>
+        <span class="badge">Gratis · Sin registro · Perú 2026</span>
+        <h1>Calcula tu sueldo, CTS e impuestos al instante.</h1>
+        <p>
+          Diez calculadoras para saber cuánto te corresponde de verdad. Fórmulas explicadas,
+          tasas actualizadas y resultados en segundos.
+        </p>
+        <div class="hero-actions">
+          <a class="btn gold" href="#calculadoras">Ver las 10 calculadoras</a>
+          <span class="hero-note">Sin crear cuenta · Sin datos personales</span>
+        </div>
+        <div class="chips">
+          <a href={url('sueldo-neto/')}>Sueldo neto</a>
+          <a href={url('cts/')}>CTS</a>
+          <a href={url('gratificacion/')}>Gratificación</a>
+          <a href={url('liquidacion/')}>Liquidación</a>
+          <a href={url('renta-quinta/')}>Renta 5ta</a>
+          <a href={url('igv/')}>IGV</a>
+        </div>
       </div>
+
+      <aside class="preview" aria-hidden="true">
+        <div class="preview-head">
+          <span>Vista previa</span>
+          <span class="preview-tag">Al instante</span>
+        </div>
+        <div class="preview-label">Sueldo neto mensual</div>
+        <div class="preview-amount">S/ 1,740.00</div>
+        <div class="preview-row"><span>Sueldo bruto</span><b>S/ 2,000.00</b></div>
+        <div class="preview-row"><span>ONP (13%)</span><b>− S/ 260.00</b></div>
+        <div class="preview-row"><span>Renta de quinta</span><b>S/ 0.00</b></div>
+        <div class="preview-foot">Cálculo referencial con la UIT 2026 de S/ 5,500.</div>
+      </aside>
     </div>
   </section>
 
-  <section class="container">
+  <section class="container" id="calculadoras">
+    <div class="stats">
+      <div class="stat"><b>10</b><span>calculadoras gratuitas</span></div>
+      <div class="stat"><b>0</b><span>registros ni datos personales</span></div>
+      <div class="stat"><b>2026</b><span>normas y tasas actualizadas</span></div>
+    </div>
+
+    <div class="section-head">
+      <div>
+        <h2>Elige tu cálculo</h2>
+        <p>Del sueldo neto a la liquidación completa, todo en un solo lugar.</p>
+      </div>
+    </div>
+
     <div class="grid">
-      {tools.map((t) => (
+      {tools.map((t, i) => (
         <article class="card">
+          <div class="card-top">
+            <span class="card-icon">{t.icon}</span>
+            <span class="card-index">{String(i + 1).padStart(2, '0')}</span>
+          </div>
           <h3>{t.name}</h3>
           <p>{t.desc}</p>
-          <a class="btn" href={url(t.href)}>Calcular ahora</a>
+          <a class="card-link" href={url(t.href)}>Calcular ahora <span aria-hidden="true">→</span></a>
         </article>
       ))}
     </div>
@@ -68,9 +110,14 @@ const schema = {
         contrastar con tu boleta o con el área de Recursos Humanos.
       </p>
       <ul>
-        <li>CTS: Depósito semestral (mayo y noviembre) según el DL 650.</li>
+        <li>Sueldo neto: descuentos de ONP o AFP y retención de renta de quinta.</li>
+        <li>CTS: depósito semestral (mayo y noviembre) según el DL 650.</li>
         <li>Gratificación: Ley 27735, con bonificación extraordinaria del 9% (EsSalud) o 6.75% (EPS).</li>
+        <li>Liquidación: CTS, gratificación y vacaciones truncas al cese.</li>
         <li>Indemnización: despido arbitrario, 1.5 sueldos por año con tope de 12 sueldos.</li>
+        <li>Renta 4ta: retención del 8% por honorarios y regularización anual.</li>
+        <li>Renta 5ta: 7 UIT de deducción y tramos de 8% a 30%.</li>
+        <li>AFP vs ONP: descuento mensual y pensión estimada.</li>
         <li>IGV: 18% (16% IGV + 2% IPM).</li>
         <li>Préstamo: sistema francés, tasa efectiva anual convertida a mensual.</li>
       </ul>

@@ -14,7 +14,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <meta name="theme-color" content="#0f2a44" />
+    <meta name="theme-color" content="#0a2540" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
@@ -31,9 +31,12 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
           Calcula Perú
         </a>
         <nav class="nav" aria-label="Principal">
+          <a href={url('sueldo-neto/')}>Sueldo neto</a>
           <a href={url('cts/')}>CTS</a>
           <a href={url('gratificacion/')}>Gratificación</a>
-          <a href={url('indemnizacion/')}>Indemnización</a>
+          <a href={url('liquidacion/')}>Liquidación</a>
+          <a href={url('renta-quinta/')}>Renta 5ta</a>
+          <a href={url('afp-vs-onp/')}>AFP vs ONP</a>
           <a href={url('igv/')}>IGV</a>
           <a href={url('prestamo/')}>Préstamo</a>
         </nav>
@@ -48,11 +51,22 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       <div class="container footer-grid">
         <div>
           <strong>Calcula Perú</strong>
-          <p style="margin:6px 0 0">Calculadoras gratuitas para sueldos, beneficios y trámites del Perú.</p>
+          <p style="margin:8px 0 0;max-width:330px">
+            Calculadoras gratuitas para sueldos, beneficios sociales e impuestos del Perú.
+            Sin registro y con fórmulas explicadas.
+          </p>
         </div>
-        <div>
-          <a href={url('sobre/')}>Sobre el sitio</a> ·
-          <a href={url('privacidad/')}>Privacidad</a> ·
+        <div class="footer-col">
+          <h4>Calculadoras</h4>
+          <a href={url('sueldo-neto/')}>Sueldo neto</a>
+          <a href={url('cts/')}>CTS</a>
+          <a href={url('liquidacion/')}>Liquidación</a>
+          <a href={url('renta-quinta/')}>Renta 5ta</a>
+        </div>
+        <div class="footer-col">
+          <h4>Sitio</h4>
+          <a href={url('sobre/')}>Sobre el sitio</a>
+          <a href={url('privacidad/')}>Privacidad</a>
           <a href={url('contacto/')}>Contacto</a>
         </div>
       </div>

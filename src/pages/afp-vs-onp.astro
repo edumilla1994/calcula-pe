@@ -1,0 +1,169 @@
+---
+import Base from '../layouts/Base.astro';
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+
+const faq = [
+  {
+    q: '¿Qué diferencia hay entre la ONP y una AFP?',
+    a: 'La ONP es un sistema de reparto: tus aportes financian las pensiones actuales y tu pensión se calcula con reglas comunes (45% de la remuneración de referencia). La AFP es una cuenta individual: el dinero es tuyo, se invierte y la pensión depende del fondo acumulado y de la rentabilidad.',
+  },
+  {
+    q: '¿Cuánto descuenta cada sistema en 2026?',
+    a: 'La ONP descuenta 13% del sueldo bruto. La AFP descuenta 10% de aporte + comisión de la administradora (1.47% a 1.69%) + prima de seguro de 1.37%, es decir entre 12.84% y 13.06%.',
+  },
+  {
+    q: '¿Puedo cambiar de ONP a AFP o viceversa?',
+    a: 'Sí, el cambio es posible en determinados momentos y con reglas de la SBS. Antes de decidir conviene comparar comisiones, rentabilidad y el historial de aportes.',
+  },
+  {
+    q: '¿La pensión que muestra la calculadora es exacta?',
+    a: 'No. Es una proyección con supuestos de sueldo constante, rentabilidad fija y años de jubilación. La pensión real depende de tus aportes efectivos, la rentabilidad del fondo y las normas vigentes al momento de jubilarte.',
+  },
+];
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'Calculadora AFP vs ONP Perú 2026',
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Web',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'PEN' },
+  inLanguage: 'es-PE',
+};
+---
+
+<Base
+  title="AFP vs ONP 2026 Perú — Compara descuento y pensión"
+  description="Compara cuánto te descuenta la AFP y la ONP en 2026, y estima tu pensión con tu sueldo, edad y rentabilidad. Cálculo referencial gratis."
+>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <div class="container tool">
+    <section class="panel">
+      <h1>AFP vs ONP 2026</h1>
+      <p class="sub">Compara el descuento mensual y la pensión estimada de cada sistema con los mismos datos.</p>
+      <form id="afp-form">
+        <label for="sueldo">Sueldo bruto mensual (S/)</label>
+        <input id="sueldo" type="number" min="0" step="0.01" value="2000" required />
+
+        <label for="edad">Edad actual</label>
+        <input id="edad" type="number" min="18" max="64" step="1" value="30" required />
+
+        <label for="jubilacion">Edad de jubilación</label>
+        <input id="jubilacion" type="number" min="60" max="75" step="1" value="65" required />
+
+        <label for="afp">AFP</label>
+        <select id="afp">
+          <option value="0.0147">Habitat — comisión 1.47%</option>
+          <option value="0.0155">Integra — comisión 1.55%</option>
+          <option value="0.0160">Prima — comisión 1.60%</option>
+          <option value="0.0169">Profuturo — comisión 1.69%</option>
+        </select>
+
+        <label for="rentabilidad">Rentabilidad anual estimada del fondo (%)</label>
+        <input id="rentabilidad" type="number" min="0" max="15" step="0.1" value="5" required />
+        <div class="hint">Las AFP han rendido entre 4% y 7% anual en el largo plazo. No es una garantía.</div>
+
+        <label for="pension">Años que cobrarás pensión</label>
+        <input id="pension" type="number" min="5" max="40" step="1" value="20" required />
+        <div class="hint">Se usa para convertir el fondo en una pensión mensual estimada.</div>
+
+        <button class="btn gold" type="submit" style="margin-top:18px;width:100%">Comparar AFP y ONP</button>
+      </form>
+      <div class="warn">
+        Proyección referencial. Supone sueldo constante, aportes sin interrupciones y una rentabilidad fija.
+        No considera topes legales, bonificaciones ni comisiones por saldo.
+      </div>
+    </section>
+
+    <aside class="panel">
+      <h2 style="margin-top:0;color:var(--navy)">Comparación</h2>
+      <div class="result">
+        <div style="font-size:.85rem;color:var(--muted)">Descuento mensual AFP</div>
+        <div class="big" id="afp-desc">S/ 0.00</div>
+        <div class="row"><span>Descuento mensual ONP</span><b id="onp-desc">S/ 0.00</b></div>
+        <div class="row"><span>Aporte que va a tu fondo AFP</span><b id="afp-aporte">S/ 0.00</b></div>
+        <div class="row"><span>Fondo AFP proyectado</span><b id="afp-fondo">S/ 0.00</b></div>
+        <div class="row"><span>Pensión AFP estimada</span><b id="afp-pension">S/ 0.00</b></div>
+        <div class="row"><span>Pensión ONP estimada</span><b id="onp-pension">S/ 0.00</b></div>
+      </div>
+      <p class="hint" style="margin-top:14px">
+        La pensión ONP se estima en 45% del promedio de remuneraciones, sin aplicar topes. La pensión AFP divide
+        el fondo proyectado entre los meses de jubilación.
+      </p>
+    </aside>
+  </div>
+
+  <section class="container explain">
+    <div class="panel">
+      <h2>¿Cómo se comparan la AFP y la ONP?</h2>
+      <p>
+        Ambos sistemas descuentan parte de tu sueldo, pero funcionan distinto. En la <strong>ONP</strong> el aporte
+        es del 13% y tu pensión se calcula con una regla común: 45% de la remuneración de referencia, con los
+        topes que fije la ley. No acumulas una cuenta individual.
+      </p>
+      <p>
+        En la <strong>AFP</strong> el 10% de tu sueldo va a una cuenta individual que se invierte. Además pagas la
+        comisión de la administradora y la prima de seguro (1.37% en 2026). Al jubilarte, la pensión depende del
+        fondo acumulado, la rentabilidad y la modalidad de retiro que elijas (renta vitalicia o retiro programado).
+      </p>
+      <p>
+        La comparación justa no es solo el descuento mensual: la AFP descuenta un poco menos, pero la pensión
+        depende de la rentabilidad y de los años de aporte. La ONP tiene una fórmula más predecible, pero no
+        hereda el fondo.
+      </p>
+      <h2>Ejemplo con sueldo de S/ 2,000</h2>
+      <p>
+        ONP: descuento de S/ 260 al mes. AFP Habitat: S/ 256.80 (10% de aporte + 1.47% de comisión + 1.37% de
+        prima). A 35 años y 5% de rentabilidad anual, el fondo proyectado ronda los S/ 222,000 y la pensión
+        estimada unos S/ 925 al mes por 20 años.
+      </p>
+    </div>
+    <aside class="panel faq">
+      <h2 style="margin-top:0">Preguntas frecuentes</h2>
+      {faq.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </aside>
+  </section>
+
+  <script is:inline>
+    (() => {
+      const fmt = (n) => new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN', maximumFractionDigits: 2 }).format(n);
+      const num = (id) => Math.max(0, parseFloat(document.getElementById(id).value) || 0);
+
+      document.getElementById('afp-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const sueldo = num('sueldo');
+        const edad = Math.min(64, Math.max(18, Math.floor(num('edad'))));
+        const jubilacion = Math.min(75, Math.max(60, Math.floor(num('jubilacion'))));
+        const comision = parseFloat(document.getElementById('afp').value);
+        const rentabilidad = Math.min(15, num('rentabilidad')) / 100;
+        const aniosPension = Math.max(5, Math.floor(num('pension')));
+        const aniosAporte = Math.max(0, jubilacion - edad);
+
+        const descAfp = sueldo * (0.10 + comision) + Math.min(sueldo, 12209.11) * 0.0137;
+        const descOnp = sueldo * 0.13;
+
+        const aporte = sueldo * 0.10;
+        const meses = aniosAporte * 12;
+        const tasaMes = Math.pow(1 + rentabilidad, 1 / 12) - 1;
+        const fondo = tasaMes > 0
+          ? aporte * ((Math.pow(1 + tasaMes, meses) - 1) / tasaMes)
+          : aporte * meses;
+
+        const pensionAfp = aniosPension > 0 ? fondo / (aniosPension * 12) : 0;
+        const pensionOnp = sueldo * 0.45;
+
+        document.getElementById('afp-desc').textContent = fmt(descAfp);
+        document.getElementById('onp-desc').textContent = fmt(descOnp);
+        document.getElementById('afp-aporte').textContent = fmt(aporte);
+        document.getElementById('afp-fondo').textContent = fmt(fondo);
+        document.getElementById('afp-pension').textContent = fmt(pensionAfp);
+        document.getElementById('onp-pension').textContent = fmt(pensionOnp);
+      });
+    })();
+  </script>
+</Base>
