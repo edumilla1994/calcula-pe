@@ -91,8 +91,12 @@ await page.waitForTimeout(200);
 const filtradas = await page.$$eval("#calc-grid .card:not([hidden])", (els) => els.length);
 console.log(`Sueldo rápido (hero): ${r11} | Buscador "cts": ${filtradas} resultado(s)`);
 
+await page.goto(base + "ejemplos/cts-2000/", { waitUntil: "networkidle" });
+const r12 = (await page.textContent(".big"))?.trim();
+console.log(`Ejemplo CTS 2000: ${r12}`);
+
 console.log("\nRESULTADOS:");
-console.log({ cts: r1, gratificacion: r2, indemnizacion: r3, igv: r4, prestamo: r5, sueldoNeto: r6, afpOnp: r7, renta4: r8, renta5: r9, liquidacion: r10, hero: r11, busqueda: filtradas });
+console.log({ cts: r1, gratificacion: r2, indemnizacion: r3, igv: r4, prestamo: r5, sueldoNeto: r6, afpOnp: r7, renta4: r8, renta5: r9, liquidacion: r10, hero: r11, busqueda: filtradas, ejemplo: r12 });
 console.log("Errores JS:", errors.length ? errors : "ninguno");
 
 await browser.close();

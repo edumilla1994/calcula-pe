@@ -1,0 +1,249 @@
+---
+import Base from '../../layouts/Base.astro';
+import {
+  ctsSemestre,
+  gratificacionSemestre,
+  impuestoAnual,
+  soles,
+  solesCorto,
+  sueldoNeto,
+  UIT,
+  MONTOS_EJEMPLO,
+  TIPOS_EJEMPLO,
+  type TipoEjemplo,
+} from '../../lib/calc';
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+
+export function getStaticPaths() {
+  return TIPOS_EJEMPLO.flatMap((tipo) =>
+    MONTOS_EJEMPLO.map((monto) => ({
+      params: { slug: `${tipo}-${monto}` },
+      props: { tipo, monto },
+    })),
+  );
+}
+
+const { tipo, monto } = Astro.props as { tipo: TipoEjemplo; monto: number };
+
+const contenido = {
+  cts: {
+    nombre: 'CTS',
+    ruta: 'cts/',
+    titulo: (m: string) => `CTS de ${m} en 2026: cuánto te depositan`,
+    descripcion: (m: string) =>
+      `Con un sueldo bruto de ${m}, tu CTS de un semestre completo es ${soles(ctsSemestre(monto).monto)}. Desglose de la remuneración computable, fórmula legal y descuentos.`,
+    faq: [
+      {
+        q: '¿La CTS tiene descuentos de ONP o AFP?',
+        a: 'No. La CTS está inafecta a los descuentos de pensión y a la renta de quinta categoría. El monto que calculas es el que se deposita.',
+      },
+      {
+        q: '¿Qué incluye la remuneración computable?',
+        a: 'El sueldo básico, la asignación familiar y un sexto de la última gratificación recibida. No incluye bonos extraordinarios ni utilidades.',
+      },
+      {
+        q: '¿Y si trabajé menos de seis meses?',
+        a: 'Se paga proporcional: la remuneración computable se divide entre 12 por cada mes completo y entre 360 por cada día adicional.',
+      },
+    ],
+  },
+  'sueldo-neto': {
+    nombre: 'Sueldo neto',
+    ruta: 'sueldo-neto/',
+    titulo: (m: string) => `Sueldo neto de ${m} en 2026: cuánto te depositan`,
+    descripcion: (m: string) =>
+      `Con un sueldo bruto de ${m} y ONP, tu sueldo neto es ${soles(sueldoNeto(monto).neto)}. Desglose del descuento de pensión y la retención de renta de quinta.`,
+    faq: [
+      {
+        q: '¿Por qué el sueldo neto es menor que el bruto?',
+        a: 'Porque al bruto se le descuenta el aporte a la ONP (13%) o a la AFP (aporte, comisión y prima) y, si corresponde, la retención de renta de quinta categoría.',
+      },
+      {
+        q: '¿Cuándo se empieza a pagar renta de quinta?',
+        a: `Cuando la remuneración anual proyectada supera las 7 UIT (${soles(7 * UIT)} en 2026). Por debajo de ese monto no hay retención de renta.`,
+      },
+      {
+        q: '¿Este cálculo incluye gratificaciones?',
+        a: 'El neto mensual no las incluye. La proyección anual sí considera dos gratificaciones para estimar la renta de quinta.',
+      },
+    ],
+  },
+  gratificacion: {
+    nombre: 'Gratificación',
+    ruta: 'gratificacion/',
+    titulo: (m: string) => `Gratificación de ${m} en 2026: bruto y neto`,
+    descripcion: (m: string) =>
+      `Con un sueldo de ${m}, tu gratificación de julio o diciembre es ${soles(gratificacionSemestre(monto).bruto)} brutos, incluido el bono del 9%. Neto con ONP: ${soles(gratificacionSemestre(monto).neto)}.`,
+    faq: [
+      {
+        q: '¿Cuándo se paga la gratificación?',
+        a: 'En julio (semestre enero–junio) y en diciembre (semestre julio–diciembre). Si trabajaste menos de seis meses, se paga proporcional.',
+      },
+      {
+        q: '¿Qué es la bonificación extraordinaria del 9%?',
+        a: 'Es el monto adicional que el empleador paga en lugar de la aportación a EsSalud. Con EPS la tasa es 6.75%. No tiene descuentos de pensión.',
+      },
+      {
+        q: '¿La gratificación tiene descuentos?',
+        a: 'Sí. La gratificación base está afecta a ONP o AFP y a renta de quinta. La bonificación extraordinaria no se descuenta.',
+      },
+    ],
+  },
+} as const;
+
+const info = contenido[tipo];
+const cts = ctsSemestre(monto);
+const neto = sueldoNeto(monto);
+const grat = gratificacionSemestre(monto);
+
+const principal = tipo === 'cts' ? cts.monto : tipo === 'sueldo-neto' ? neto.neto : grat.bruto;
+const etiqueta = tipo === 'cts' ? 'CTS del semestre' : tipo === 'sueldo-neto' ? 'Sueldo neto mensual' : 'Gratificación bruta';
+
+const titulo = `${info.nombre} de ${solesCorto(monto)} en 2026`;
+const h1 = info.titulo(solesCorto(monto));
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: info.faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+---
+
+<Base title={info.titulo(solesCorto(monto)) + ' — Calcula Perú'} description={info.descripcion(solesCorto(monto))}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+
+  <div class="container tool">
+    <section class="panel">
+      <span class="badge">Ejemplo · {info.nombre}</span>
+      <h1>{h1}</h1>
+      <p class="sub">
+        Cálculo con un sueldo bruto de {solesCorto(monto)}, sin asignación familiar y con una gratificación igual al sueldo.
+      </p>
+
+      <div class="result">
+        <div style="font-size:.85rem;color:var(--muted)">{etiqueta}</div>
+        <div class="big">{soles(principal)}</div>
+
+        {tipo === 'cts' && (
+          <>
+            <div class="row"><span>Remuneración computable</span><b>{soles(cts.rc)}</b></div>
+            <div class="row"><span>Sueldo</span><b>{soles(monto)}</b></div>
+            <div class="row"><span>1/6 de gratificación</span><b>{soles(monto / 6)}</b></div>
+            <div class="row"><span>Fórmula</span><b style="font-weight:600">RC ÷ 2 (semestre completo)</b></div>
+          </>
+        )}
+
+        {tipo === 'sueldo-neto' && (
+          <>
+            <div class="row"><span>Sueldo bruto</span><b>{soles(neto.bruto)}</b></div>
+            <div class="row"><span>ONP (13%)</span><b>− {soles(neto.pension)}</b></div>
+            <div class="row"><span>Renta de quinta</span><b>− {soles(neto.renta)}</b></div>
+            <div class="row"><span>Total descuentos</span><b>− {soles(neto.pension + neto.renta)}</b></div>
+          </>
+        )}
+
+        {tipo === 'gratificacion' && (
+          <>
+            <div class="row"><span>Gratificación base</span><b>{soles(grat.base)}</b></div>
+            <div class="row"><span>Bono extraordinario (9%)</span><b>{soles(grat.bono)}</b></div>
+            <div class="row"><span>ONP sobre la base</span><b>− {soles(grat.desc)}</b></div>
+            <div class="row"><span>Neto con ONP</span><b>{soles(grat.neto)}</b></div>
+          </>
+        )}
+      </div>
+
+      <a class="btn gold" style="width:100%;margin-top:16px" href={url(info.ruta)}>
+        Calcular con mi sueldo
+        <span aria-hidden="true">→</span>
+      </a>
+    </section>
+
+    <aside class="panel">
+      <h2 style="margin-top:0;color:var(--navy)">Cómo se calcula</h2>
+
+      {tipo === 'cts' && (
+        <>
+          <p>
+            La remuneración computable suma el sueldo de {soles(monto)} más un sexto de la gratificación
+            ({soles(monto / 6)}), lo que da {soles(cts.rc)}. Para un semestre completo, la CTS equivale a la
+            mitad de esa base: <strong>{soles(cts.monto)}</strong>.
+          </p>
+          <p>
+            La fórmula legal es <strong>RC ÷ 12 × meses + RC ÷ 360 × días</strong>. Con seis meses completos
+            se reduce a RC ÷ 2.
+          </p>
+        </>
+      )}
+
+      {tipo === 'sueldo-neto' && (
+        <>
+          <p>
+            La ONP descuenta el 13% del sueldo bruto: {soles(neto.pension)}. Para la renta de quinta se
+            proyecta el ingreso anual con dos gratificaciones, se restan 7 UIT ({soles(7 * UIT)}) y se aplican
+            los tramos de 8% a 30%.
+          </p>
+          <p>
+            El impuesto anual resultante es {soles(impuestoAnual(neto.bruto * 12 * (1 + 1 / 6) - 7 * UIT))},
+            es decir {soles(neto.renta)} al mes. El neto queda en <strong>{soles(neto.neto)}</strong>.
+          </p>
+        </>
+      )}
+
+      {tipo === 'gratificacion' && (
+        <>
+          <p>
+            La gratificación de un semestre completo equivale a una remuneración: {soles(grat.base)}. Sobre
+            esa base se paga el bono extraordinario del 9% ({soles(grat.bono)}), que reemplaza el aporte a
+            EsSalud.
+          </p>
+          <p>
+            El total bruto es <strong>{soles(grat.bruto)}</strong>. Con ONP, el descuento del 13% se aplica
+            solo a la gratificación base ({soles(grat.desc)}), así que el neto es {soles(grat.neto)}.
+          </p>
+        </>
+      )}
+
+      <p class="hint">
+        Cálculo referencial con la UIT 2026 de {soles(UIT)}. No reemplaza una liquidación oficial.
+      </p>
+    </aside>
+  </div>
+
+  <section class="container explain">
+    <div class="panel faq">
+      <h2 style="margin-top:0">Preguntas frecuentes</h2>
+      {info.faq.map((f) => (
+        <details>
+          <summary>{f.q}</summary>
+          <p>{f.a}</p>
+        </details>
+      ))}
+    </div>
+
+    <aside class="panel">
+      <h2 style="margin-top:0">Otros montos de {info.nombre}</h2>
+      <div class="chips" style="margin-top:0">
+        {MONTOS_EJEMPLO.filter((m) => m !== monto).map((m) => (
+          <a href={url(`ejemplos/${tipo}-${m}/`)}>{solesCorto(m)}</a>
+        ))}
+      </div>
+
+      <h2>Otros cálculos con {solesCorto(monto)}</h2>
+      <div class="chips" style="margin-top:0">
+        {TIPOS_EJEMPLO.filter((t) => t !== tipo).map((t) => (
+          <a href={url(`ejemplos/${t}-${monto}/`)}>{contenido[t].nombre}</a>
+        ))}
+      </div>
+
+      <p class="hint" style="margin-top:16px">
+        <a href={url('ejemplos/')}>Ver todos los ejemplos</a> · <a href={url(info.ruta)}>Calculadora completa</a>
+      </p>
+    </aside>
+  </section>
+</Base>

@@ -1,0 +1,78 @@
+---
+import Base from '../../layouts/Base.astro';
+import { ctsSemestre, gratificacionSemestre, soles, solesCorto, sueldoNeto, MONTOS_EJEMPLO } from '../../lib/calc';
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+const url = (p = '') => base + p.replace(/^\//, '');
+
+const MONTOS = MONTOS_EJEMPLO;
+
+const grupos = [
+  {
+    tipo: 'cts',
+    nombre: 'CTS',
+    desc: 'Depósito de mayo o noviembre con un semestre completo.',
+    ruta: 'cts/',
+    resultado: (m: number) => soles(ctsSemestre(m).monto),
+  },
+  {
+    tipo: 'sueldo-neto',
+    nombre: 'Sueldo neto',
+    desc: 'Lo que te depositan después de ONP y renta de quinta.',
+    ruta: 'sueldo-neto/',
+    resultado: (m: number) => soles(sueldoNeto(m).neto),
+  },
+  {
+    tipo: 'gratificacion',
+    nombre: 'Gratificación',
+    desc: 'Julio o diciembre, con el bono extraordinario del 9%.',
+    ruta: 'gratificacion/',
+    resultado: (m: number) => soles(gratificacionSemestre(m).bruto),
+  },
+];
+---
+
+<Base
+  title="Ejemplos de CTS, sueldo neto y gratificación por sueldo — 2026"
+  description="Resultados reales para sueldos de S/ 1,000 a S/ 5,000: CTS, sueldo neto y gratificación 2026, con el desglose de cada cálculo."
+>
+  <div class="container page">
+    <span class="badge">Ejemplos · Perú 2026</span>
+    <h1>Resultados por sueldo</h1>
+    <p style="max-width:680px">
+      Elige tu sueldo y mira el resultado exacto de cada cálculo, sin llenar formularios. Todos los
+      ejemplos usan un semestre completo, sin asignación familiar y con gratificación igual al sueldo.
+    </p>
+
+    {grupos.map((g) => (
+      <section>
+        <h2>{g.nombre}</h2>
+        <p>{g.desc}</p>
+        <div class="grid">
+          {MONTOS.map((m) => (
+            <a class="card" href={url(`ejemplos/${g.tipo}-${m}/`)}>
+              <h3>{g.nombre} de {solesCorto(m)}</h3>
+              <p>Resultado: <strong>{g.resultado(m)}</strong></p>
+              <span class="card-link">Ver desglose <span aria-hidden="true">→</span></span>
+            </a>
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <div class="panel" style="margin-bottom:40px">
+      <h2 style="margin-top:0">¿Para qué sirven estos ejemplos?</h2>
+      <p>
+        Son atajos para los casos más consultados. Si tu sueldo no está en la lista, usa la calculadora
+        completa: acepta cualquier monto, asignación familiar, meses y días trabajados.
+      </p>
+      <div class="chips" style="margin-top:0">
+        <a href={url('sueldo-neto/')}>Sueldo neto</a>
+        <a href={url('cts/')}>CTS</a>
+        <a href={url('gratificacion/')}>Gratificación</a>
+        <a href={url('liquidacion/')}>Liquidación</a>
+        <a href={url('')}>Todas las calculadoras</a>
+      </div>
+    </div>
+  </div>
+</Base>

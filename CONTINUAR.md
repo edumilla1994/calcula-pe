@@ -34,6 +34,21 @@ por categoría, tarjetas con iconos SVG y franja de normas. Dirección visual to
 decorativas, números tabulares y header sticky claro. Paleta: navy `#0a2540`, dorado `#f5b301` y
 gris frío `#f6f8fa`. Todo el sistema vive en `src/styles/global.css`.
 
+## SEO programático
+
+`/ejemplos/` genera 21 páginas de resultados por sueldo (`/ejemplos/cts-2000/`,
+`/ejemplos/sueldo-neto-3000/`, etc.) con el monto ya calculado, desglose, FAQ y enlaces internos.
+Las fórmulas viven en `src/lib/calc.ts` y se comparten con el build. El sitemap pasa de 14 a 36 URLs.
+
+Herramientas open source recomendadas para la siguiente fase:
+
+- **Unlighthouse** (github.com/harlan-zw/unlighthouse): corre Lighthouse sobre todas las páginas y
+  detecta problemas de SEO, rendimiento y accesibilidad.
+- **Serpbear** (github.com/towfiqi/serpbear): seguimiento de posiciones en Google, self-hosted.
+
+No usar bots ni servicios de "tráfico masivo": Google los detecta como tráfico inválido y suspende
+AdSense. El crecimiento tiene que venir de contenido indexado y distribución real.
+
 ## Publicidad (AdSense)
 
 El componente `src/components/AdSlot.astro` reserva el espacio y carga el anuncio solo si existen

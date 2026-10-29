@@ -615,7 +615,8 @@ a:focus-visible, button:focus-visible, summary:focus-visible, input:focus-visibl
   font-variant-numeric: tabular-nums;
 }
 
-.card h2 {
+.card h2,
+.card h3 {
   margin: 0 0 5px;
   color: var(--navy);
   font-size: 1.02rem;
